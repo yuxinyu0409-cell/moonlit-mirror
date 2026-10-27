@@ -1,5 +1,7 @@
 # 月下水镜 · 隐月 / Moonlit Mirror
 
+**[在线体验](https://moonlit-mirror.vercel.app)** · [GitHub 源码](https://github.com/yuxinyu0409-cell/moonlit-mirror)
+
 月夜水镜中的 3D 塔罗交互作品。通过摄像头张手拨水、握拳捞牌，也可用鼠标完成体验。Three.js 实时渲染水纹、卡牌与出水动画；MediaPipe 在本地 Worker 中识别手势。
 
 ## 功能
