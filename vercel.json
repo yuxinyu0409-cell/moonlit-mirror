@@ -1,0 +1,21 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "python3 scripts/build_public.py",
+  "outputDirectory": "public",
+  "functions": {
+    "api/reading.py": {
+      "maxDuration": 120,
+      "excludeFiles": "{assets/**,public/**,output/**,docs/**,**/*.test.mjs,test_*.py}"
+    }
+  },
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {"key": "X-Content-Type-Options", "value": "nosniff"},
+        {"key": "Referrer-Policy", "value": "strict-origin-when-cross-origin"},
+        {"key": "Permissions-Policy", "value": "camera=(self), microphone=()"}
+      ]
+    }
+  ]
+}

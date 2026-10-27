@@ -1,0 +1,14 @@
+import assert from 'node:assert/strict';
+import {RitualSound} from './sound.js';
+const voices=[];
+const param=()=>({value:0,setValueAtTime(v){this.value=v},cancelScheduledValues(){},setTargetAtTime(v){this.value=v}});
+const sound=new RitualSound();sound.ctx={currentTime:0,createBufferSource(){const source={connect(){},disconnect(){},start(){},stop(t){this.stopped=t}};voices.push(source);return source;},createGain(){return {gain:param(),connect(){},disconnect(){}};}};sound.master={};sound.buffers.stir={duration:.72};
+sound.stir(2,0);assert.equal(voices.length,0);
+sound.enabled=true;sound.stir(.1,0);assert.equal(voices.length,0);
+sound.stir(.4,0);assert.equal(voices.length,1);const quiet=sound.waterVoice.gain.gain.value;assert.equal(voices[0].loop,false);
+sound.stir(2,300);assert.equal(voices.length,1,'no repeating chatter');
+voices[0].onended();sound.stir(2,900);assert.equal(voices.length,2);assert.ok(sound.waterVoice.gain.gain.value>quiet);
+sound.stir(0,910);assert.equal(sound.waterVoice,null);
+sound.stir(1,1800);sound.update(2000);assert.equal(sound.waterVoice,null);
+sound.stir(1,2700);sound.lift();assert.equal(sound.waterVoice,null);
+console.log('PASS: mute, jitter rejection, non-looping ripple, sparse triggering, velocity volume, stop and lift');

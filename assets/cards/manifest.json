@@ -1,0 +1,282 @@
+[
+  {
+    "id": 22,
+    "name": "Ace of Wands",
+    "file": "i_104.jpg"
+  },
+  {
+    "id": 23,
+    "name": "Two of Wands",
+    "file": "i_103.jpg"
+  },
+  {
+    "id": 24,
+    "name": "Three of Wands",
+    "file": "i_102.jpg"
+  },
+  {
+    "id": 25,
+    "name": "Four of Wands",
+    "file": "i_101.jpg"
+  },
+  {
+    "id": 26,
+    "name": "Five of Wands",
+    "file": "i_100.jpg"
+  },
+  {
+    "id": 27,
+    "name": "Six of Wands",
+    "file": "i_099.jpg"
+  },
+  {
+    "id": 28,
+    "name": "Seven of Wands",
+    "file": "i_098.jpg"
+  },
+  {
+    "id": 29,
+    "name": "Eight of Wands",
+    "file": "i_097.jpg"
+  },
+  {
+    "id": 30,
+    "name": "Nine of Wands",
+    "file": "i_096.jpg"
+  },
+  {
+    "id": 31,
+    "name": "Ten of Wands",
+    "file": "i_095.jpg"
+  },
+  {
+    "id": 32,
+    "name": "Page of Wands",
+    "file": "i_094.jpg"
+  },
+  {
+    "id": 33,
+    "name": "Knight of Wands",
+    "file": "i_093.jpg"
+  },
+  {
+    "id": 34,
+    "name": "Queen of Wands",
+    "file": "i_092.jpg"
+  },
+  {
+    "id": 35,
+    "name": "King of Wands",
+    "file": "i_091.jpg"
+  },
+  {
+    "id": 36,
+    "name": "Ace of Cups",
+    "file": "i_118.jpg"
+  },
+  {
+    "id": 37,
+    "name": "Two of Cups",
+    "file": "i_117.jpg"
+  },
+  {
+    "id": 38,
+    "name": "Three of Cups",
+    "file": "i_116.jpg"
+  },
+  {
+    "id": 39,
+    "name": "Four of Cups",
+    "file": "i_115.jpg"
+  },
+  {
+    "id": 40,
+    "name": "Five of Cups",
+    "file": "i_114.jpg"
+  },
+  {
+    "id": 41,
+    "name": "Six of Cups",
+    "file": "i_113.jpg"
+  },
+  {
+    "id": 42,
+    "name": "Seven of Cups",
+    "file": "i_112.jpg"
+  },
+  {
+    "id": 43,
+    "name": "Eight of Cups",
+    "file": "i_111.jpg"
+  },
+  {
+    "id": 44,
+    "name": "Nine of Cups",
+    "file": "i_110.jpg"
+  },
+  {
+    "id": 45,
+    "name": "Ten of Cups",
+    "file": "i_109.jpg"
+  },
+  {
+    "id": 46,
+    "name": "Page of Cups",
+    "file": "i_108.jpg"
+  },
+  {
+    "id": 47,
+    "name": "Knight of Cups",
+    "file": "i_107.jpg"
+  },
+  {
+    "id": 48,
+    "name": "Queen of Cups",
+    "file": "i_106.jpg"
+  },
+  {
+    "id": 49,
+    "name": "King of Cups",
+    "file": "i_105.jpg"
+  },
+  {
+    "id": 50,
+    "name": "Ace of Swords",
+    "file": "i_132.jpg"
+  },
+  {
+    "id": 51,
+    "name": "Two of Swords",
+    "file": "i_131.jpg"
+  },
+  {
+    "id": 52,
+    "name": "Three of Swords",
+    "file": "i_130.jpg"
+  },
+  {
+    "id": 53,
+    "name": "Four of Swords",
+    "file": "i_129.jpg"
+  },
+  {
+    "id": 54,
+    "name": "Five of Swords",
+    "file": "i_128.jpg"
+  },
+  {
+    "id": 55,
+    "name": "Six of Swords",
+    "file": "i_127.jpg"
+  },
+  {
+    "id": 56,
+    "name": "Seven of Swords",
+    "file": "i_126.jpg"
+  },
+  {
+    "id": 57,
+    "name": "Eight of Swords",
+    "file": "i_125.jpg"
+  },
+  {
+    "id": 58,
+    "name": "Nine of Swords",
+    "file": "i_124.jpg"
+  },
+  {
+    "id": 59,
+    "name": "Ten of Swords",
+    "file": "i_123.jpg"
+  },
+  {
+    "id": 60,
+    "name": "Page of Swords",
+    "file": "i_122.jpg"
+  },
+  {
+    "id": 61,
+    "name": "Knight of Swords",
+    "file": "i_121.jpg"
+  },
+  {
+    "id": 62,
+    "name": "Queen of Swords",
+    "file": "i_120.jpg"
+  },
+  {
+    "id": 63,
+    "name": "King of Swords",
+    "file": "i_119.jpg"
+  },
+  {
+    "id": 64,
+    "name": "Ace of Pentacles",
+    "file": "i_146.jpg"
+  },
+  {
+    "id": 65,
+    "name": "Two of Pentacles",
+    "file": "i_145.jpg"
+  },
+  {
+    "id": 66,
+    "name": "Three of Pentacles",
+    "file": "i_144.jpg"
+  },
+  {
+    "id": 67,
+    "name": "Four of Pentacles",
+    "file": "i_143.jpg"
+  },
+  {
+    "id": 68,
+    "name": "Five of Pentacles",
+    "file": "i_142.jpg"
+  },
+  {
+    "id": 69,
+    "name": "Six of Pentacles",
+    "file": "i_141.jpg"
+  },
+  {
+    "id": 70,
+    "name": "Seven of Pentacles",
+    "file": "i_140.jpg"
+  },
+  {
+    "id": 71,
+    "name": "Eight of Pentacles",
+    "file": "i_139.jpg"
+  },
+  {
+    "id": 72,
+    "name": "Nine of Pentacles",
+    "file": "i_138.jpg"
+  },
+  {
+    "id": 73,
+    "name": "Ten of Pentacles",
+    "file": "i_137.jpg"
+  },
+  {
+    "id": 74,
+    "name": "Page of Pentacles",
+    "file": "i_136.jpg"
+  },
+  {
+    "id": 75,
+    "name": "Knight of Pentacles",
+    "file": "i_135.jpg"
+  },
+  {
+    "id": 76,
+    "name": "Queen of Pentacles",
+    "file": "i_134.jpg"
+  },
+  {
+    "id": 77,
+    "name": "King of Pentacles",
+    "file": "i_133.jpg"
+  }
+]

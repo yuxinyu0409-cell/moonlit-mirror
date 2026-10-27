@@ -1,0 +1,10 @@
+.env
+.env.*
+!.env.example
+.git
+.vercel
+__pycache__
+node_modules
+output
+/*.png
+*.log
