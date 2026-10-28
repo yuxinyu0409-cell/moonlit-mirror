@@ -18,7 +18,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             return
         try:
             size = int(self.headers.get('Content-Length', '0'))
-            if not 0 < size <= 4096:
+            if not 0 < size <= 16384:
                 raise ReadingError(400, '请求格式有误。')
             if self.headers.get_content_type() != 'application/json':
                 raise ReadingError(415, '请使用JSON格式提交问题。')

@@ -27,6 +27,28 @@ class ReadingTests(unittest.TestCase):
         with patch.object(api.pathlib.Path, 'read_text', return_value='OPENAI_API_KEY=updated-test'):
             self.assertEqual(api.reading_config()['OPENAI_API_KEY'], 'updated-test')
 
+    def test_followup_validation(self):
+        self.assertEqual(api.validate_followup({}), {})
+        valid = {'followup':' 下一步呢？ ', 'previous_answer':'原解读', 'history':[{'question':'先问', 'answer':'先答'}]}
+        self.assertEqual(api.validate_followup(valid)['followup'], '下一步呢？')
+        for bad in [{'followup':''}, {'followup':'问'*101}, {'followup':'问', 'previous_answer':'答'*701}, {'followup':'问', 'history':[{}]}, {'followup':'问', 'history':[{'question':'问','answer':'答'}]*5}]:
+            with self.assertRaises(api.ReadingError): api.validate_followup(bad)
+
+    def test_followup_context_reaches_both_providers(self):
+        data = {'question':'原问题', 'cards':[{'id':0,'reversed':True},6,18], 'followup':'下一步呢？', 'previous_answer':'原解读', 'history':[{'question':'先问','answer':'先答'}]}
+        for provider in ['openai', 'deepseek']:
+            response = {'status':'completed','output':[{'content':[{'type':'output_text','text':json.dumps(VALID)}]}]} if provider == 'openai' else {'choices':[{'finish_reason':'stop','message':{'content':json.dumps(VALID)}}]}
+            with patch.object(api, 'reading_config', return_value={'READING_PROVIDER':provider, 'OPENAI_API_KEY':'test', 'DEEPSEEK_API_KEY':'test'}), patch.object(api.urllib.request, 'urlopen', return_value=io.BytesIO(json.dumps(response).encode())) as send:
+                api.generate_reading(data)
+            body = json.loads(send.call_args.args[0].data)
+            context = json.loads(body['input'] if provider == 'openai' else body['messages'][1]['content'])
+            instructions = body['instructions'] if provider == 'openai' else body['messages'][0]['content']
+            self.assertEqual(context['question'], '原问题')
+            self.assertEqual(context['followup'], '下一步呢？')
+            self.assertEqual(context['history'], data['history'])
+            self.assertEqual(context['cards'][0]['orientation'], '逆位')
+            self.assertIn('本次是追问', instructions)
+
     def test_knowledge_matches_full_deck(self):
         self.assertEqual([c['id'] for c in api.KNOWLEDGE['cards']], list(range(78)))
         for c in api.KNOWLEDGE['cards']:

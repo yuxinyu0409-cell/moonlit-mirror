@@ -1,5 +1,5 @@
 import {CardPool} from './pool.js';
-import {createPersonalReading} from './reading.js?v=20261027-reading-ui';
+import {createPersonalReading} from './reading.js?v=20261028-reading-focused';
 import * as THREE from './assets/vendor/three.module.js';
 import {cards} from './cards.js';
 import {Ritual,describeHand,handToWater} from './gesture.js';
@@ -74,9 +74,9 @@ const aimGeometry=new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(),
 const aimLine=new THREE.Line(aimGeometry,new THREE.LineBasicMaterial({color:'#ffe1a3',transparent:true,opacity:0,depthWrite:false}));scene.add(aimLine);
 const magic=new WaterMagic(scene,glowTexture);
 const pool=new CardPool(cards),poolRoot=new THREE.Group();scene.add(poolRoot);
-const poolGeometry=new THREE.PlaneGeometry(.35,.54);
-const poolVisuals=Array.from({length:cards.length},()=>{const group=new THREE.Group(),material=new THREE.MeshBasicMaterial({map:backMat.map,transparent:true,opacity:.55,side:THREE.DoubleSide,depthWrite:false,toneMapped:false});const face=new THREE.Mesh(poolGeometry,material);face.rotation.x=-Math.PI/2;group.add(face);const rim=new THREE.Mesh(new THREE.TorusGeometry(.27,.008,6,48),new THREE.MeshBasicMaterial({color:'#f5d59b',transparent:true,opacity:0,depthWrite:false}));rim.rotation.x=-Math.PI/2;rim.scale.x=.7;group.add(rim);poolRoot.add(group);return {group,face,material,rim};});
-const lockRing=mesh(new THREE.TorusGeometry(.42,.014,8,64),new THREE.MeshBasicMaterial({color:'#fff0bd',transparent:true,opacity:0,depthWrite:false,blending:THREE.AdditiveBlending}));lockRing.rotation.x=-Math.PI/2;
+const poolGeometry=new THREE.PlaneGeometry(.40,.64);
+const poolVisuals=Array.from({length:cards.length},()=>{const group=new THREE.Group(),material=new THREE.MeshBasicMaterial({map:backMat.map,transparent:true,opacity:.55,side:THREE.DoubleSide,depthWrite:false,toneMapped:false});const face=new THREE.Mesh(poolGeometry,material);face.rotation.x=-Math.PI/2;group.add(face);const rim=new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-.21,.012,-.33),new THREE.Vector3(.21,.012,-.33),new THREE.Vector3(.21,.012,.33),new THREE.Vector3(-.21,.012,.33)]),new THREE.LineBasicMaterial({color:'#f5d59b',transparent:true,opacity:.45,depthWrite:false}));group.add(rim);poolRoot.add(group);return {group,face,material,rim};});
+const lockRing=new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-.24,0,-.37),new THREE.Vector3(.24,0,-.37),new THREE.Vector3(.24,0,.37),new THREE.Vector3(-.24,0,.37)]),new THREE.LineBasicMaterial({color:'#fff0bd',transparent:true,opacity:0,depthWrite:false}));scene.add(lockRing);
 let lockAge=1;
 let liftOrigin=new THREE.Vector3();
 
@@ -85,9 +85,9 @@ function ripple(h,strength=1){const p=worldPoint(h);rippleData[rippleIndex++%14]
 function chooseCard(card){selected=spread.draw(card);if(!selected)return;hideGestureDemo();gestureLearned=true;try{localStorage.setItem('moonlit-gesture-learned','true')}catch{}const old=frontMat.map;frontMat.map=cardTexture(selected);old.dispose();frontMat.emissive.set('#ffffff');frontMat.emissiveIntensity=.3;frontMat.emissiveMap=frontMat.map;frontMat.needsUpdate=true}
 function clearSpread(){sounds.stopStir();splashAge=5;splashRings.forEach(r=>r.visible=false);hideGestureDemo();pool.reset();lockAge=1;lockRing.material.opacity=0;poolRoot.visible=false;personalReading.reset();magic.clear();clearTimeout(settleTimer);clearTimeout(revealTimer);settling=false;spread.reset();parked.forEach(p=>{scene.remove(p.group);p.front.map.dispose();p.front.dispose();p.back.dispose();p.edge.dispose();p.group.children.forEach(m=>m.geometry.dispose())});parked.length=0;document.body.classList.remove('reading');window.scrollTo({top:0,behavior:'instant'});$('#spread-slots').hidden=true;$('#spread-slots').innerHTML='';}
 function updateSlots(){const n=spread.drawn.length;$('#spread-slots').hidden=false;$('#spread-slots').innerHTML=positions.map((p,i)=>`<span class="${i<n?'filled':i===n?'current':''}"><b>${i<n?'✦':'○'}</b> ${p.title}<small>${i<n?'已捞起':i===n?'等待你选择':'静候水中'}</small></span>`).join('');$('#draw-count').textContent=`${n} / 3 张已捞起`;}
-function resetRitual(){clearSpread();ritual.reset();finished=false;selected=null;hand=null;prevPosition=null;liftSoundPlayed=false;waterMotion=0;frontMat.opacity=backMat.opacity=0;cardGroup.position.set(0,-.04,.1);cardGroup.rotation.set(Math.PI/2,0,0);$('#result').hidden=true;$('#ritual').hidden=false;$('#instruction').textContent='张开手拨动水面，靠近牌影，握拳捞起。';poolRoot.visible=true;$('#progress i').style.transform='scaleX(0)';status(mode==='demo'?'移动鼠标靠近，牌影会自动回应':'伸手靠近，牌影会自动回应');trailPoints.fill(100);trailGeo.attributes.position.needsUpdate=true;updateSlots()}
+function resetRitual(){clearSpread();ritual.reset();finished=false;selected=null;hand=null;prevPosition=null;liftSoundPlayed=false;waterMotion=0;frontMat.opacity=backMat.opacity=0;cardGroup.position.set(0,-.04,.1);cardGroup.rotation.set(Math.PI/2,0,0);$('#result').hidden=true;$('#ritual').hidden=false;$('#instruction').textContent=mode==='demo'?'移动鼠标靠近牌背，等它亮起后点击。':'张开手拨动水面，靠近牌背，握拳捞起。';poolRoot.visible=true;$('#progress i').style.transform='scaleX(0)';status(mode==='demo'?'移动鼠标靠近，牌影会自动回应':'伸手靠近，牌影会自动回应');trailPoints.fill(100);trailGeo.attributes.position.needsUpdate=true;updateSlots()}
 function inputLabels(type){$('[data-step="wake"]').textContent=type==='demo'?'01 移动寻牌':'01 拨水寻牌';$('[data-step="fist"]').textContent=type==='demo'?'02 点击选牌':'02 握拳选牌'}
-function begin(type){activateSound();inputLabels(type);if(paused){resumeRitual(type);return}clearTimeout(cameraTimeout);$('#camera-feedback').hidden=true;$('#camera-actions').hidden=true;mode=type;document.body.classList.add('in-ritual');$('#welcome').hidden=true;$('#ritual').hidden=false;$('#demo-badge').hidden=type!=='demo';resetRitual();if(type==='demo')$('#instruction').textContent='移动鼠标靠近牌影，等它亮起后点击。';if(!gestureLearned&&type==='camera')showGestureDemo()}
+function begin(type){activateSound();inputLabels(type);if(paused){resumeRitual(type);return}clearTimeout(cameraTimeout);$('#camera-feedback').hidden=true;$('#camera-actions').hidden=true;mode=type;document.body.classList.add('in-ritual');$('#welcome').hidden=true;$('#ritual').hidden=false;$('#demo-badge').hidden=type!=='demo';resetRitual();if(type==='demo')$('#instruction').textContent='移动鼠标靠近牌影，等它亮起后点击。';if(type==='camera')showGestureDemo()}
 function finish(){
  if(settling||finished||!spread.commit())return;
  settling=true;magic.release();sounds.release();ripple({x:.5,y:.57},1.7);emitDrops();
@@ -98,7 +98,7 @@ function finish(){
  status(spread.complete?'三张牌已齐 · 月光正在揭晓':'牌已落位 · 下一张仍在水中');
  $('#instruction').textContent=spread.complete?'让三段低语，连成一段属于你的故事。':mode==='demo'?'移动鼠标寻找下一张牌，亮起后点击。':'张开手，拨水寻找下一张牌，再握拳捞起。';
  settleTimer=setTimeout(()=>{
-  if(spread.complete){finished=true;settling=false;document.body.classList.add('reading');$('#ritual').hidden=true;sounds.reveal();
+  if(spread.complete){finished=true;settling=false;closeCamera();document.body.classList.add('reading');$('#ritual').hidden=true;sounds.reveal();
    revealTimer=setTimeout(()=>{if(!finished)return;$('#result').hidden=false;window.scrollTo({top:0,behavior:'instant'});$('#result-question').textContent=$('#question').value;$('#result-question').hidden=!$('#question').value;$('#reading-grid').innerHTML=spread.drawn.map((c,i)=>{const r=interpretation(c,i);return `<article class="oracle-card" aria-labelledby="oracle-card-${i}"><div class="oracle-crest" aria-hidden="true">${["☼","☽","✧"][i]}</div><div class="oracle-art oracle-art-${i}"><img class="drawn-card ${c.reversed?'card-reversed':''}" src="${c[9]}" alt="${r.name} · ${r.orientation}的韦特塔罗牌面" width="180" height="310"></div><div class="oracle-copy"><p class="position-title">0${i+1} · ${r.title}</p><h3 id="oracle-card-${i}">${r.name}</h3><p class="oracle-status"><span>${r.orientation}</span></p><p class="keywords">${r.keywords}</p><details><summary>牌义与思考</summary><div class="traditional-card"><p class="oracle-description">${r.text}</p><div><p>${r.meaning}</p><p>图像：${r.symbols}</p></div><p class="reflection">${r.reflection}</p></div></details></div></article>`}).join('');$('#synthesis').textContent=summarizeSpread(spread.drawn);personalReading.start($('#question').value,spread.drawn);status('三张牌，映照同一个你')},1000);
   }else{settling=false;selected=null;ritual.reset(true);liftSoundPlayed=false;cardGroup.position.set(0,-.04,.1);cardGroup.rotation.set(Math.PI/2,0,0);$('#progress i').style.transform='scaleX(0)';}
  },520);
@@ -114,7 +114,7 @@ hand={...h,...ritual.position};h=hand;
  if(ritual.stage!=='wake'){trailPoints.set([p.x,.03,p.z],(trailIndex++%160)*3);trailGeo.attributes.position.needsUpdate=true}
  if(lm){shadowHand??=lm.map(v=>({...v}));for(let i=0;i<21;i++){shadowHand[i].x+=(lm[i].x-shadowHand[i].x)*.13;shadowHand[i].y+=(lm[i].y-shadowHand[i].y)*.13;const sp=worldPoint({x:1-shadowHand[i].x,y:shadowHand[i].y});shadowGeo.attributes.position.setXYZ(i,sp.x,.015,sp.z)}shadowGeo.attributes.position.needsUpdate=true;const a=shadowGeo.attributes.position.array,b=shadowLinesGeo.attributes.position.array;connections.forEach(([i,j],n)=>{b.set(a.slice(i*3,i*3+3),n*6);b.set(a.slice(j*3,j*3+3),n*6+3)});shadowLinesGeo.attributes.position.needsUpdate=true;shadowDots.visible=shadowLines.visible=true}
  if(ritual.stage==='lift'&&ritual.lift>.15&&!liftSoundPlayed){sounds.lift();emitDrops();liftSoundPlayed=true}if(ritual.stage==='ready')liftSoundPlayed=false;
- if(oldStage!==ritual.stage){if(ritual.stage==='lift'){const picked=pool.take();if(!picked){ritual.reset(true);return}lockAge=0;lockRing.position.set(picked.x,.22,picked.z);chooseCard(picked.card);liftOrigin.set(picked.x,.035,picked.z);cardGroup.position.copy(liftOrigin);cardGroup.rotation.set(Math.PI/2,Math.PI,picked.angle);cardGroup.scale.setScalar(.74);magic.trigger(liftOrigin);splashAt(liftOrigin);}tone(ritual.stage==='ready'?440:ritual.stage==='lift'?523:293,.65);if(ritual.stage==='done')finish()}
+ if(oldStage!==ritual.stage){if(ritual.stage==='lift'){const picked=pool.take();if(!picked){ritual.reset(true);return}lockAge=0;lockRing.position.set(picked.x,.22,picked.z);lockRing.rotation.y=picked.angle;chooseCard(picked.card);liftOrigin.set(picked.x,.035,picked.z);cardGroup.position.copy(liftOrigin);cardGroup.rotation.set(Math.PI/2,Math.PI,picked.angle);cardGroup.scale.setScalar(.74);magic.trigger(liftOrigin);splashAt(liftOrigin);}tone(ritual.stage==='ready'?440:ritual.stage==='lift'?523:293,.65);if(ritual.stage==='done')finish()}
  if(settling||finished)return;
  $('#progress i').style.transform=`scaleX(${ritual.progress})`;
  const instructions={wake:'张开手，让掌心映入水镜。',seek:'左右拨动水面，寻找水下的牌。',ready:!ritual.armed?'先张开手，再靠近牌影。':pool.focus?'这张牌正在回应你 · 握拳即可捞起。':'拨水寻牌，靠近牌影，握拳捞起。',lift:'已握拳选中 · 水镜正在捞起',done:'牌已离水，正在落位。'};
@@ -124,16 +124,22 @@ hand={...h,...ritual.position};h=hand;
 }
 // Camera lifecycle: model loading and inference are isolated in a worker.
 const video=$('#video'),skeleton=$('#skeleton'),sk=skeleton.getContext('2d');skeleton.width=640;skeleton.height=480;
-function drawLandmarks(lm){sk.clearRect(0,0,640,480);if(!lm)return;sk.strokeStyle='#c7d6cc';sk.lineWidth=2;connections.forEach(([a,b])=>{sk.beginPath();sk.moveTo(lm[a].x*640,lm[a].y*480);sk.lineTo(lm[b].x*640,lm[b].y*480);sk.stroke()});sk.fillStyle='#e1cb96';lm.forEach(p=>{sk.beginPath();sk.arc(p.x*640,p.y*480,3,0,Math.PI*2);sk.fill()})}
+function drawLandmarks(lm){sk.clearRect(0,0,640,480);if(!lm)return;sk.strokeStyle='#c269ff';sk.lineWidth=5;sk.shadowColor='#a742ff';sk.shadowBlur=9;connections.forEach(([a,b])=>{sk.beginPath();sk.moveTo(lm[a].x*640,lm[a].y*480);sk.lineTo(lm[b].x*640,lm[b].y*480);sk.stroke()});sk.fillStyle='#efd5ff';lm.forEach(p=>{sk.beginPath();sk.arc(p.x*640,p.y*480,5,0,Math.PI*2);sk.fill()})}
 function closeCamera(){clearTimeout(cameraTimeout);session++;starting=false;workerReady=false;busy=false;worker?.terminate();worker=null;stream?.getTracks().forEach(t=>t.stop());stream=null;video.srcObject=null;$('#camera-panel').hidden=true;shadowDots.visible=shadowLines.visible=false;shadowHand=null;$('#camera').disabled=false;$('#resume-camera').disabled=false;$('#resume-cancel').hidden=true;$('#question').readOnly=false;$('#welcome').removeAttribute('aria-busy');$('#camera').innerHTML='<span class="launch-label">开始抽牌</span><span class="launch-arrow" aria-hidden="true">→</span>'}
 function returnWelcome(message){paused=false;$('#resume-dialog').close();document.body.classList.remove('in-ritual');clearSpread();closeCamera();mode='idle';finished=false;ritual.reset();$('#result').hidden=true;$('#ritual').hidden=true;$('#welcome').hidden=false;$('#demo-badge').hidden=true;frontMat.opacity=backMat.opacity=0;$('#progress i').style.transform='scaleX(0)';status(message)}
 $('#stop').onclick=()=>pauseRitual('摄像头已关闭，已选牌会为你保留。');
 $('#cancel-camera').onclick=()=>cameraFailure('已取消启动，可重新开启摄像头。');
 $('#copy-camera-link').onclick=async()=>{try{await navigator.clipboard.writeText(location.origin+location.pathname);$('#copy-camera-link').textContent='已复制 · 可粘贴到 Chrome / Safari'}catch{$('#camera-feedback').textContent='请复制地址栏链接，在 Chrome 或 Safari 中打开。'}};
 
-$('#welcome').onsubmit=event=>event.preventDefault();
+function requireQuestion(){
+ const input=$('#question');
+ if(input.value.trim()){input.removeAttribute('aria-invalid');return true;}
+ input.setAttribute('aria-invalid','true');$('#question-hint').textContent='先写下一个问题，再让水镜为你抽牌。';input.focus();return false;
+}
+$('#question').addEventListener('input',()=>{const ready=!!$('#question').value.trim();$('#question').removeAttribute('aria-invalid');$('#welcome').classList.toggle('question-ready',ready);$('#question-hint').textContent=ready?'问题已写好，可以开始抽牌了。':'请先写下你的问题，再开始抽牌。';});
+$('#welcome').onsubmit=event=>{event.preventDefault();requireQuestion();};
 $('#question').addEventListener('keydown',event=>{if(event.key==='Enter'&&!event.isComposing){event.preventDefault();$('#question').blur();}});
-async function startCamera(){activateSound();
+async function startCamera(){if(!paused&&!requireQuestion())return;activateSound();
  if(!paused&&new URLSearchParams(location.search).get('interaction')==='mouse'){closeCamera();begin('demo');pointerInside=true;return;}
  if(starting)return;starting=true;$('#resume-camera').disabled=true;$('#resume-cancel').hidden=!paused;const id=++session;$('#camera').disabled=true;$('#question').readOnly=true;$('#question').blur();$('#welcome').setAttribute('aria-busy','true');$('#camera').innerHTML='<span class="launch-label">正在开启摄像头…</span><span class="launch-spinner" aria-hidden="true">☾</span>';status('正在连接摄像头。若出现权限提示，请选择允许。');cameraDeadline(25000,'等待摄像头授权超时。请检查浏览器与系统的摄像头权限，再点击重试。');
  try{
@@ -173,14 +179,14 @@ function resumeRitual(type){activateSound();
  inputLabels(type);
  if(type==='demo')closeCamera();paused=false;mode=type;$('#resume-dialog').close();$('#welcome').hidden=true;$('#camera-feedback').hidden=true;$('#camera-actions').hidden=true;document.body.classList.add('in-ritual');
  hand=null;prevPosition=null;pointer.fist=false;pointer.open=true;pointerInside=false;lastUpdate=0;lastHandTime=performance.now();ritual.reset(true);$('#ritual').hidden=false;$('#instruction').textContent=type==='demo'?'移动鼠标靠近牌影，等它亮起后点击。':'张手靠近牌影，亮起后握拳选中。';$('#demo-badge').hidden=type!=='demo';updateSlots();status(type==='demo'?'移动鼠标靠近牌影，点击即可捞起。':'进度已接回 · 张手靠近，再握拳选牌');
- if(type==='camera'&&!gestureLearned)showGestureDemo();
+ if(type==='camera')showGestureDemo();
 }
 $('#resume-dialog').addEventListener('cancel',event=>event.preventDefault());
 $('#resume-camera').onclick=()=>startCamera();
 $('#resume-mouse').onclick=()=>resumeRitual('demo');
 $('#resume-cancel').onclick=()=>cameraFailure('已取消摄像头启动。');
 $('#pause-ritual').onclick=()=>pauseRitual();
-$('#mouse-entry').onclick=()=>{closeCamera();begin('demo')};
+$('#mouse-entry').onclick=()=>{if(!requireQuestion())return;closeCamera();begin('demo')};
 
 $('#reset').onclick=$('#again').onclick=()=>{if(mode==='camera'||mode==='demo'){resetRitual();if(mode==='camera'&&!workerReady)pauseRitual('准备好后开启摄像头，或改用鼠标。')}else returnWelcome('水镜静候你的到来')};
 $('#change-question').onclick=()=>{returnWelcome('写下新的问题，让水镜再次回应。');$('#question').focus();$('#question').select();};
@@ -196,7 +202,7 @@ function animate(now){frameId=requestAnimationFrame(animate);const dt=Math.min(.
  if(!paused&&mode==='camera'&&now-lastHandTime>700&&!finished&&!settling&&ritual.stage!=='lift'){pool.hover(null);pool.stir(null,dt);status('等你的手回来 · 已选的牌会保留');$('#instruction').textContent='把手自然放回镜头即可继续。'}
  if(!paused&&!settling&&!finished&&ritual.stage==='lift'){ritual.advance(dt);if(ritual.lift>.15&&!liftSoundPlayed){sounds.lift();emitDrops();liftSoundPlayed=true}if(ritual.stage==='done')finish()}
  pool.update(dt);poolRoot.visible=mode!=='idle'&&!finished;
- poolVisuals.forEach((v,i)=>{const c=pool.items[i],focus=c===pool.focus&&!settling&&ritual.stage==='ready';v.group.visible=!c.removed;v.group.position.set(c.x,THREE.MathUtils.damp(v.group.position.y,-c.depth+Math.sin(t*1.1+i)*.009+(focus?.27:0),6,dt),c.z);v.group.rotation.y=c.angle;v.material.map=backMat.map;v.material.opacity=THREE.MathUtils.damp(v.material.opacity,focus?1:pool.focus?.28:.63+(i%4)*.075,5,dt);v.rim.material.opacity=THREE.MathUtils.damp(v.rim.material.opacity,focus?.8:0,7,dt);v.rim.position.y=.025;v.group.scale.setScalar(THREE.MathUtils.damp(v.group.scale.x,focus?1.22:1,9,dt));});
+ poolVisuals.forEach((v,i)=>{const c=pool.items[i],focus=c===pool.focus&&!settling&&ritual.stage==='ready';v.group.visible=!c.removed;v.group.position.set(c.x,THREE.MathUtils.damp(v.group.position.y,.055+c.depth*.25+Math.sin(t*1.35+i*1.7)*.045+(focus?.27:0),6,dt),c.z);v.group.rotation.set(Math.sin(t*1.1+i)*.045,c.angle+Math.sin(t*.55+i)*.055,Math.cos(t*.9+i)*.035);v.material.map=backMat.map;v.material.opacity=THREE.MathUtils.damp(v.material.opacity,focus?1:pool.focus?.65:.85+(i%3)*.05,5,dt);v.rim.material.opacity=THREE.MathUtils.damp(v.rim.material.opacity,focus?1:.35+Math.sin(t*1.5+i)*.12,7,dt);v.rim.position.y=.025;v.group.scale.setScalar(THREE.MathUtils.damp(v.group.scale.x,focus?1.22:1,9,dt));});
  const cardVisible=mode==='idle'||(!settling&&!finished&&ritual.stage==='lift');frontMat.opacity=backMat.opacity=THREE.MathUtils.damp(frontMat.opacity,cardVisible?1:0,10,dt);
  if(!settling&&!finished&&ritual.stage==='lift'){const f=ritual.lift,rise=Math.min(1,f/.56),ease=1-Math.pow(1-rise,3),reduced=magic.reduced;cardGroup.position.set(liftOrigin.x*(1-ease*.65),liftOrigin.y+ease*2.05,liftOrigin.z*(1-ease*.6));cardGroup.rotation.set(Math.PI/2*(1-ease)-.12*ease,Math.PI+(reduced?0:Math.sin(f*Math.PI)*.16),.04*Math.sin(f*Math.PI));cardGroup.scale.setScalar(.74+ease*(innerWidth<700?.35:.58));}
  cardEdgeMat.opacity=frontMat.opacity;

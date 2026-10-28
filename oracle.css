@@ -288,3 +288,48 @@ body:not(.in-ritual) .environment::after { background:linear-gradient(#080b1720,
 @media(prefers-reduced-motion:reduce) {
   .reading #personal-content > .reading-details > summary,.reading-arrow { transition:none; }
 }
+/* Ritual clarity and a compact, readable oracle. */
+#camera-panel { width:clamp(250px,23vw,340px); padding:9px; border:1px solid #be80f0aa; border-radius:12px; box-shadow:0 0 26px #9f4ded25; }
+.camera-tag { font-size:10px; color:#ecd5ff; }
+.camera-footer { font-size:12px; padding-top:8px; }
+.camera-footer button { font-size:11px; }
+.gesture-demo { width:min(500px,100%); border-color:#cda4e6b0; background:linear-gradient(120deg,#24203bf5,#111a2af5); box-shadow:0 0 35px #b77ddd24; }
+.demo-heading { font-size:15px; }
+.gesture-demo>p { color:#e9d9ef; }
+.reading .followup { width:min(880px,100%); box-sizing:border-box; margin:28px auto; padding:28px; border:1px solid #b08bd35c; border-radius:12px; background:linear-gradient(120deg,#211d32,#151b2a); }
+.reading .followup h3 { font-size:23px; font-weight:400; color:#ead6b0; margin:8px 0; }
+.followup-hint { color:#bcb0c5; font-size:13px; }
+#followup-form { display:grid; grid-template-columns:1fr auto; gap:12px; align-items:end; margin-top:20px; }
+#followup-form label { grid-column:1/-1; color:#d8c2e8; font-size:12px; }
+#followup-question { width:100%; min-width:0; text-align:left; letter-spacing:0; font-size:14px; border:1px solid #b08bd35c; border-radius:7px; padding:12px; background:#0d102680; }
+#followup-submit { margin:0; white-space:nowrap; }
+#followup-submit:disabled { opacity:.55; cursor:wait; }
+#followup-status { font-size:12px; color:#d6b9e9; line-height:1.7; }
+.followup-turn { border-top:1px solid #c5a4dc35; margin-top:22px; padding-top:18px; }
+.followup-turn h4 { font-size:12px; color:#c6a5e4; margin:10px 0; }
+.followup-turn p { font-size:15px; line-height:1.9; color:#e7dfd6; white-space:pre-line; overflow-wrap:anywhere; }
+@media(max-width:700px) {
+ #camera-panel { width:clamp(165px,42vw,220px); left:12px; top:84px; bottom:auto; padding:6px; }
+ .camera-tag { display:block; font-size:8px; }
+ .camera-footer { display:flex; font-size:10px; }
+ .camera-footer button { font-size:9px; }
+ .in-ritual .title { opacity:0; }
+ .reading .followup { padding:20px; }
+ #followup-form { grid-template-columns:1fr; }
+ #followup-submit { justify-self:start; }
+}
+/* Make the question the clear first step, before either draw entry. */
+.welcome .question-wrap { width:100%; text-align:left; }
+.welcome #question { width:100%; box-sizing:border-box; min-height:54px; padding:14px 16px; text-align:left; letter-spacing:.5px; font-size:14px; border:1px solid #dcc08dc9; border-radius:10px; color:#fff1dc; background:linear-gradient(110deg,#1c2139,#171a2e); outline:none; box-shadow:0 0 0 3px #d8b98010,0 0 20px #d8b98024,inset 0 1px 0 #fff2d718; transition:border-color .2s,box-shadow .2s; }
+.welcome #question::placeholder { color:#c5bbcc; }
+.welcome:not(.question-ready) #question { animation:question-glow 3s ease-in-out infinite; }
+.welcome #question:focus { border-color:#eed3ff; box-shadow:0 0 0 3px #be86ed28,0 0 26px #b88ae74a; animation:none; }
+.welcome #question[aria-invalid="true"] { border-color:#f2c39c; box-shadow:0 0 0 3px #edba8f24,0 0 26px #edba8f45; animation:none; }
+.question-hint { margin:9px 2px 0; color:#e6cda2; font-size:12px; line-height:1.7; letter-spacing:.5px; }
+.question-ready .question-hint { color:#c9c0dc; }
+@keyframes question-glow { 50% { border-color:#f1d6a9; box-shadow:0 0 0 3px #d8b98018,0 0 26px #d8b98042,inset 0 1px 0 #fff2d718; } }
+@media(prefers-reduced-motion:reduce) { .welcome:not(.question-ready) #question { animation:none; } }
+@media(max-width:700px) { .welcome #question { font-size:13px; min-height:50px; } .question-hint { font-size:11px; } }
+
+.reading #personal-content .reading-answer p:first-of-type { font-size:21px; line-height:1.85; }
+@media(max-width:600px) { .reading #personal-content .reading-answer p:first-of-type { font-size:18px; } }
